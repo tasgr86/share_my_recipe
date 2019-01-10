@@ -54,13 +54,13 @@ class MainViewModel (var _application: Application) : AndroidViewModel(_applicat
 
     }
 
-    fun getFavorites() : ArrayList<TheFavorites>{
+    fun getFavorites() : ArrayList<TheStoredRecipes>{
 
         return MyFavorites(_application).getFavorites()
 
     }
 
-    fun storeFavorites(fav : TheFavorites){
+    fun storeFavorites(fav : TheStoredRecipes){
 
         MyFavorites(_application).storeFavorites(fav)
 

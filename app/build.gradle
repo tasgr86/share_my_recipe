@@ -62,4 +62,17 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation 'jp.wasabeef:glide-transformations:4.0.0'
+    implementation "com.hanks:htextview-base:0.1.6"
+    implementation "com.hanks:htextview-line:0.1.6"
+    implementation "com.hanks:htextview-fade:0.1.6"
+    implementation "com.hanks:htextview-scale:0.1.6"
+
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
+
+    implementation 'ca.mimic:oauth2library:2.4.2'
+
+
 }
+
+apply plugin: 'com.google.gms.google-services'

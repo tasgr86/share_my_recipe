@@ -44,6 +44,8 @@ class RatingDialog : DialogFragment() {
 
         super.onViewCreated(view, savedInstanceState)
 
+        rating_dialog_ratingbar.rating = lastRating.toFloat()
+
         rating_dialog_submit.setOnClickListener {
 
             ratingListener?.onRatingDialog(rating_dialog_ratingbar.rating.toInt())
@@ -57,8 +59,11 @@ class RatingDialog : DialogFragment() {
     companion object {
 
         var textSize = 0F
+        var lastRating = 0
 
-        fun newInstance(): RatingDialog {
+        fun newInstance(rating : Int): RatingDialog {
+
+            lastRating = rating
 
             return RatingDialog()
 

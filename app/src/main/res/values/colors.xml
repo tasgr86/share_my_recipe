@@ -5,6 +5,8 @@
     <color name="colorAccent">#cb3f5b</color>
 
     <color name="white">#eeeeee</color>
+    <color name="white_light">#9E9E9E</color>
+    <color name="white_very_light">#616161</color>
     <color name="black">#000000</color>
     <color name="black_light">#212121</color>
 
@@ -12,5 +14,10 @@
 
     <color name="tint_black">#6F000000</color>
     <color name="tint_very_black">#BD000000</color>
+    <color name="tint_very_black1">#CF000000</color>
+
+    <!--<color name="photo_background">#292f3d</color>-->
+
+    <color name="photo_background">#5F000000</color>
 
 </resources>

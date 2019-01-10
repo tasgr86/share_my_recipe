@@ -46,8 +46,8 @@ class FlipAdapter(var context: Context, var recipes: ArrayList<TheRecipes>) : Ba
             convertView = inflater.inflate(R.layout.recipe_row, parent, false)
 
             holder.title = convertView!!.findViewById<View>(R.id.recipe_row_title) as TextView
-            holder.category = convertView!!.findViewById<View>(R.id.recipe_row_category) as TextView
-            holder.preparatioTime = convertView!!.findViewById<View>(R.id.recipe_row_preparation_time) as TextView
+            holder.category = convertView.findViewById<View>(R.id.recipe_row_category) as TextView
+            holder.preparatioTime = convertView.findViewById<View>(R.id.recipe_row_preparation_time) as TextView
             holder.image = convertView.findViewById(R.id.recipe_row_feature) as ImageView
 
             convertView.tag = holder
@@ -60,25 +60,21 @@ class FlipAdapter(var context: Context, var recipes: ArrayList<TheRecipes>) : Ba
 
         holder.title!!.text = recipes[position].title
         holder.category!!.text = recipes[position].categoryName
-        holder.preparatioTime!!.text = recipes[position].preparationTime.toString().plus(" ").plus(context.getString(
-            R.string.minutes
-        ))
+        holder.preparatioTime!!.text = recipes[position].preparationTime.toString().plus(" ").plus(context.getString(R.string.minutes_cap))
 
-        Picasso.get()
-            .load(pic_url.plus(recipes[position].photoFeature))
-            .into(holder.image)
+        Picasso.get().load(pic_url.plus(recipes[position].photoFeature)).into(holder.image)
 
         convertView.setOnClickListener {
 
             val intent = Intent(context, ShowRecipe::class.java)
             intent.putExtra("recipe", recipes[position])
-            intent.putExtra("id", recipes[position].id)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
 
         }
 
         return convertView
+
     }
 
     internal class ViewHolder {

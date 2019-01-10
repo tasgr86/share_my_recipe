@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.DrawableImageViewTarget
@@ -25,19 +26,20 @@ import tasos.grigoris.sharemyrecipe.Model.*
 
 class ShowRecipe : AppCompatActivity() {
 
-    private lateinit var viewModel      : MainViewModel
-    private lateinit var recipe         : TheRecipes
-    private lateinit var ingrAdapter    : IngredientsAdapter
-    private lateinit var stepsAdapter   : StepsAdapter
-    private lateinit var ingredients    : ArrayList<TheIngredients>
-    private lateinit var steps          : ArrayList<TheSteps>
-    private var textSize                = 0F
-    private var headersTextSize         = 0F
-    private var racionesTextSize        = 0F
-    private var minLoading              = 1000L
-    private var optimalLoading          = 1000L
-    private var startLoading            = 0L
-    private var finishLoading           = 0L
+    private lateinit var recipe             : TheRecipes
+    private lateinit var theStoredRecipe    : TheStoredRecipes
+    private lateinit var viewModel          : MainViewModel
+    private lateinit var ingrAdapter        : IngredientsAdapter
+    private lateinit var stepsAdapter       : StepsAdapter
+    private lateinit var ingredients        : ArrayList<TheIngredients>
+    private lateinit var steps              : ArrayList<TheSteps>
+    private var textSize                    = 0F
+    private var headersTextSize             = 0F
+    private var racionesTextSize            = 0F
+    private var startLoading                = 0L
+    private var finishLoading               = 0L
+    private var myRating                    = 0
+    private lateinit var myPrefs            : MyPrefs
 
     var pic_url = "https://simplebudget.eu/recipes/pictures/recipes/"
 
@@ -45,26 +47,31 @@ class ShowRecipe : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.show_recipe)
 
+        myPrefs = MyPrefs(this)
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        textSize = resources.getDimension(R.dimen.show_recipe_txt) / resources.displayMetrics.density
-        headersTextSize = resources.getDimension(R.dimen.show_recipe_headers) / resources.displayMetrics.density
-        racionesTextSize = resources.getDimension(R.dimen.show_recipe_raciones) / resources.displayMetrics.density
+        val lastFont = myPrefs.getFont()
+
+        textSize = lastFont
+        headersTextSize = lastFont + 4
+        racionesTextSize = lastFont + 4
 
         setSupportActionBar(show_recipe_toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         recipe = intent.getParcelableExtra("recipe")
 
-        if (intent.hasExtra("ingredients") && intent.hasExtra("steps")) {
+        if (myPrefs.getTheStoredRecipe(recipe.id) != null) { // When activity gets loaded from Favorites fragment
 
+            theStoredRecipe = myPrefs.getTheStoredRecipe(recipe.id)!!
             show_recipe_content.visibility = View.VISIBLE
             show_recipe_loading_layout.visibility = View.GONE
-            ingredients = intent.getParcelableArrayListExtra("ingredients")
-            steps = intent.getParcelableArrayListExtra("steps")
+            ingredients = theStoredRecipe.ingredients
+            steps = theStoredRecipe.steps
             loadLayout()
             loadIngredientsAdapter()
             loadStepsAdapter()
+            updateFavoriteIcon()
 
         } else {
 
@@ -87,37 +94,35 @@ class ShowRecipe : AppCompatActivity() {
 
         }
 
-
         show_recipes_add_favorite.setOnClickListener {
 
-            if (viewModel.isFavorite(recipe.id)){
+            if (theStoredRecipe.isFavorite){
 
-                viewModel.removeFavorite(recipe.id)
+                myPrefs.updateFavoriteRecipe(recipe.id, false)
                 Snackbar.make(show_recipe_top, getString(R.string.removed_from_favorites), Snackbar.LENGTH_SHORT).show()
 
             }else{
 
-                viewModel.storeFavorites(TheFavorites(recipe, steps, ingredients))
+                myPrefs.updateFavoriteRecipe(recipe.id, true)
                 Snackbar.make(show_recipe_top, getString(R.string.added_to_favorites), Snackbar.LENGTH_LONG).show()
 
             }
 
+            theStoredRecipe = myPrefs.getTheStoredRecipe(recipe.id)!!
             updateFavoriteIcon()
 
         }
 
         show_recipe_myrate.setOnClickListener { loadRating() }
 
-        updateFavoriteIcon()
-
     }
 
     private fun updateFavoriteIcon(){
 
-        if (viewModel.isFavorite(recipe.id))
-            show_recipes_add_favorite.background = ContextCompat.getDrawable(this, R.drawable.ic_favorite_red)
+        if (theStoredRecipe.isFavorite)
+            show_recipes_add_favorite.background = ContextCompat.getDrawable(this, R.drawable.ic_favorites_show_recipe_red)
         else
-            show_recipes_add_favorite.background = ContextCompat.getDrawable(this, R.drawable.ic_favorite)
+            show_recipes_add_favorite.background = ContextCompat.getDrawable(this, R.drawable.ic_favorites_show_recipe)
 
     }
 
@@ -130,9 +135,11 @@ class ShowRecipe : AppCompatActivity() {
 
             override fun onSliderDialog(value: Int) {
 
+                myPrefs.storeFont(value.toFloat())
+
                 textSize = value.toFloat()
                 headersTextSize = value.toFloat() + 4
-                racionesTextSize = value.toFloat() + 8
+                racionesTextSize = value.toFloat() + 4
                 ingrAdapter.updateAdapter(textSize, racionesTextSize)
                 stepsAdapter.updateAdapter(textSize, headersTextSize)
 
@@ -143,11 +150,10 @@ class ShowRecipe : AppCompatActivity() {
 
 
 
-
     private fun loadLayout(){
 
-        show_recipe_title.text = recipe.title
-        Picasso.get().load(pic_url.plus(recipe.photo1)).into(show_recipe_background)
+        show_recipe_title.text = theStoredRecipe.recipe.title
+        Picasso.get().load(pic_url.plus(theStoredRecipe.recipe.photo1)).into(show_recipe_background)
 
     }
 
@@ -155,13 +161,7 @@ class ShowRecipe : AppCompatActivity() {
     private fun loadIngredientsAdapter(){
 
         val lm = LinearLayoutManager(applicationContext)
-        ingrAdapter = IngredientsAdapter(
-            applicationContext,
-            ingredients,
-            recipe,
-            textSize,
-            racionesTextSize
-        )
+        ingrAdapter = IngredientsAdapter(applicationContext, ingredients, theStoredRecipe.recipe, textSize, racionesTextSize)
         rv_systatika.layoutManager = lm
         rv_systatika.adapter = ingrAdapter
         rv_systatika.isNestedScrollingEnabled = false
@@ -172,8 +172,7 @@ class ShowRecipe : AppCompatActivity() {
     private fun loadStepsAdapter(){
 
         val lm = LinearLayoutManager(applicationContext)
-        stepsAdapter =
-                StepsAdapter(applicationContext, steps, textSize, headersTextSize)
+        stepsAdapter = StepsAdapter(applicationContext, steps, textSize, headersTextSize)
         show_recipe_steps.layoutManager = lm
         show_recipe_steps.adapter = stepsAdapter
         show_recipe_steps.isNestedScrollingEnabled = false
@@ -193,7 +192,7 @@ class ShowRecipe : AppCompatActivity() {
 
         val lifecycle = this
         val fm = supportFragmentManager
-        val dialog = RatingDialog.newInstance()
+        val dialog = RatingDialog.newInstance(myRating)
         dialog.show(fm, "as")
         dialog.ratingListener = (object : RatingDialog.RatingListener {
 
@@ -205,15 +204,13 @@ class ShowRecipe : AppCompatActivity() {
 
                     if ((JSONObject(it)["status"] as Int) == 1) {
 
-                        updateRatings(JSONObject(it).getInt("myRating"), JSONObject(it).getDouble("avg"))
-//                        show_recipe_myrate_txt.text = getString(R.string.my_rate).plus(" ").plus(value.toString())
+                        myRating = JSONObject(it).getInt("myRating")
+                        updateRatings(myRating, JSONObject(it).getDouble("avg"))
 
                     }
                 })
-
             }
         })
-
     }
 
 
@@ -221,50 +218,41 @@ class ShowRecipe : AppCompatActivity() {
 
         startLoading = System.currentTimeMillis()
 
-        Toast.makeText(this, "Geting recipe ".plus(recipe.id), Toast.LENGTH_LONG).show()
-
         viewModel.getStepsAndIngredients(recipe.id, 1).observe(this, Observer<TheStepsAndIngredients>{
 
-            ingredients = it!!.ingredients!!
-            steps = it.steps!!
+            if (it?.ingredients == null || it.steps == null) {
 
+                Handler().postDelayed({ finish() }, 1000)
 
-            println("Fetched avg ".plus(it.avg).plus(" ").plus(it.myRating))
+            }else{
 
-            it.ingredients!!.forEach {
+                ingredients = it.ingredients
+                steps = it.steps
 
-                println("Fetched ingreients: ".plus(it.ingredientsID).plus("").plus(it.name))
+                theStoredRecipe = TheStoredRecipes(recipe, steps, ingredients, false)
+                myPrefs.storeTheRecipe(theStoredRecipe)
 
+                if (it.myRating != null)
+                    myRating = it.myRating
+
+                updateRatings(it.myRating, it.avg)
+
+                finishLoading = System.currentTimeMillis()
+
+                val diff = finishLoading - startLoading
+
+                if (diff < MyConsts.minLoading){
+
+                    val delay = MyConsts.optimalLoading - diff
+                    Handler().postDelayed({ loadContent() }, delay)
+
+                } else {
+
+                    loadContent()
+
+                }
             }
-
-
-            it.steps!!.forEach {
-
-                println("Fetched steps: ".plus(it.step_id).plus("").plus(it.step))
-
-            }
-
-
-
-            updateRatings(it.myRating, it.avg)
-
-            finishLoading = System.currentTimeMillis()
-
-            val diff = finishLoading - startLoading
-
-            if (diff < minLoading){
-
-                val delay = optimalLoading - diff
-                Handler().postDelayed({ loadContent() }, delay)
-
-            } else {
-
-                loadContent()
-
-            }
-
         })
-
     }
 
 
@@ -290,9 +278,7 @@ class ShowRecipe : AppCompatActivity() {
         if (avg == null)
             show_recipe_avg.text = "-"
         else
-            show_recipe_avg.text = avg.toString()
-
+            show_recipe_avg.text = avg.toString().plus("/").plus("5")
 
     }
-
 }

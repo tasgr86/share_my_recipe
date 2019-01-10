@@ -17,9 +17,6 @@ interface RetrofitAPI {
     @GET("fetch_add_recipe.php")
     fun fetchAddRecipe(): Call<TheAddRecipeReq>
 
-//    @GET("fetch_add_recipe.php")
-//    fun fetchAddRecipe(): Call<String>
-
     @FormUrlEncoded
     @POST("fetch_ingredientsOfRecipe.php")
     fun fetchIngredientsOfRecipe(@Field("recipeID") recipeID: Int): Call<ArrayList<TheIngredients>>
@@ -41,8 +38,11 @@ interface RetrofitAPI {
     fun submitRating(@Field("userID") userID: Int, @Field("recipeID") recipeID: Int,
                      @Field("rating") rating: Int): Call<String>
 
+    @FormUrlEncoded
+    @POST("verify_user.php")
+    fun verifyUser(@Field("userID") userID: String, @Field("authCode") recipeID: String): Call<String>
+
     @Multipart
-//    @FormUrlEncoded
     @POST("publish_recipe.php")
     fun sendRecipe(@Part("file1") file1 : RequestBody,
                    @Part fileF1 : MultipartBody.Part,
@@ -59,6 +59,5 @@ interface RetrofitAPI {
                    @Part("nationality") nationality: RequestBody,
                    @Part("difficulty") difficulty: RequestBody,
                    @Part("userID") userID: RequestBody): Call<String>
-
 
 }

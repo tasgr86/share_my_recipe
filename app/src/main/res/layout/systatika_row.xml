@@ -20,7 +20,8 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/systatika_row_name"
             android:gravity="right"
-            android:layout_marginEnd="8dp" android:textColor="@color/white" android:textSize="@dimen/show_recipe_txt"/>
+            android:layout_marginEnd="8dp" android:textColor="@color/white"
+            android:textSize="@dimen/small"/>
 
     <TextView
             android:text="TextView"
@@ -35,6 +36,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/systatika_row_posotita"
             app:layout_constraintHorizontal_bias="0.5" android:textColor="@color/white"
-            android:textSize="@dimen/show_recipe_txt"/>
+            android:textSize="@dimen/small"/>
 
 </android.support.constraint.ConstraintLayout>

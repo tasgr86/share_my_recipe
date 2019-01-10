@@ -1,10 +1,11 @@
 package tasos.grigoris.sharemyrecipe
 
+import android.content.Context
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import java.text.DecimalFormat
 
-class Utils{
+class Utils (val context : Context){
 
     val fmt = DateTimeFormat.forPattern("yyyyMMdd")
 
@@ -37,4 +38,11 @@ class Utils{
     }
 
 
+    fun shouldShowSplashScreen() : Boolean {
+
+        return false
+
+       // return MyPrefs(context).getLastDaySplashWasShown().isBefore(LocalDate.now())
+
+    }
 }

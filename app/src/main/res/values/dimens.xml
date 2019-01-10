@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="show_recipe_txt">14dp</dimen>
-    <dimen name="show_recipe_headers">18dp</dimen>
-    <dimen name="show_recipe_raciones">22dp</dimen>
+    <dimen name="small">14dp</dimen>
+    <dimen name="medium">18dp</dimen>
+    <dimen name="large">22dp</dimen>
+    <dimen name="very_large">24dp</dimen>
+    <dimen name="extra_large">28dp</dimen>
 
 </resources>

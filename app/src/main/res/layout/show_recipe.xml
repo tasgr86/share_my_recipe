@@ -45,7 +45,7 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="true"
@@ -102,7 +102,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:id="@+id/show_recipe_steps"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout4" android:layout_marginTop="8dp"/>
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout4"
+                    android:layout_marginTop="8dp" android:layout_marginBottom="8dp"/>
 
             <android.support.constraint.ConstraintLayout
                     android:layout_width="0dp"
@@ -202,22 +203,13 @@
             </android.support.constraint.ConstraintLayout>
             <ImageView
                     android:layout_width="30dp"
-                    android:layout_height="30dp" app:srcCompat="@drawable/ic_favorite"
+                    android:layout_height="30dp" app:srcCompat="@drawable/ic_favorites_show_recipe"
                     android:id="@+id/show_recipes_add_favorite" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="8dp" android:layout_marginTop="16dp"
                     app:layout_constraintTop_toBottomOf="@+id/show_recipe_title"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintEnd_toStartOf="@+id/show_recipe_rate"
             />
-            <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp" app:srcCompat="@drawable/ic_share"
-                    android:id="@+id/show_recipe_share" android:layout_marginTop="16dp"
-                    app:layout_constraintTop_toBottomOf="@+id/show_recipe_title"
-                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                    app:layout_constraintStart_toEndOf="@+id/show_recipe_myrate"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    android:padding="3dp"/>
             <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp" app:srcCompat="@drawable/ic_rate"
@@ -232,8 +224,7 @@
                     android:id="@+id/show_recipe_myrate" android:layout_marginTop="16dp"
                     app:layout_constraintTop_toBottomOf="@+id/show_recipe_title"
                     app:layout_constraintStart_toEndOf="@+id/show_recipe_rate"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/show_recipe_share"/>
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>
             <TextView
                     android:text="Αγαπημένα"
                     android:layout_width="wrap_content"
@@ -252,7 +243,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/show_recipe_rate" android:textColor="@color/white"
                     android:textSize="12sp"/>
             <TextView
-                    android:text="Δικιά μου -"
+                    android:text="@string/my_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/show_recipe_myrate_txt" android:layout_marginTop="8dp"
@@ -260,18 +251,9 @@
                     app:layout_constraintStart_toStartOf="@+id/show_recipe_myrate"
                     app:layout_constraintEnd_toEndOf="@+id/show_recipe_myrate" android:textColor="@color/white"
                     android:textSize="12sp"/>
-            <TextView
-                    android:text="Μοιράσου"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView7" android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toBottomOf="@+id/show_recipe_share"
-                    app:layout_constraintStart_toStartOf="@+id/show_recipe_share"
-                    app:layout_constraintEnd_toEndOf="@+id/show_recipe_share" android:textColor="@color/white"
-                    android:textSize="12sp"/>
 
         </android.support.constraint.ConstraintLayout>
 
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.constraint.ConstraintLayout>

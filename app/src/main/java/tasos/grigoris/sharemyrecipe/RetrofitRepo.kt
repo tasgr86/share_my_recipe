@@ -12,6 +12,7 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import retrofit2.create
 import tasos.grigoris.sharemyrecipe.Model.*
 import java.io.File
 import kotlin.coroutines.coroutineContext
@@ -20,9 +21,6 @@ import kotlin.coroutines.coroutineContext
 class RetrofitRepo(_apiServices: RetrofitAPI = RetrofitClient.createClient().create(RetrofitAPI::class.java)){
 
     val apiServices = _apiServices
-    var recipesListener: ((LiveData<TheRecipes>)->Unit)? = null
- //   var ingredientsListener: ((ArrayList<TheIngredients>)->Unit)? = null
-    var categoriesListener: ((ArrayList<TheCategories>)->Unit)? = null
 
 
     fun getRecipes() : LiveData<ArrayList<TheRecipes>> {
@@ -35,6 +33,8 @@ class RetrofitRepo(_apiServices: RetrofitAPI = RetrofitClient.createClient().cre
 
                 if (response.isSuccessful)
                     recipes.value = response.body()
+
+                println("got recipes: ".plus(recipes))
 
             }
 
@@ -153,8 +153,6 @@ class RetrofitRepo(_apiServices: RetrofitAPI = RetrofitClient.createClient().cre
     }
 
 
-
-
     fun getAddRecipeReq() : LiveData<TheAddRecipeReq>{
 
         val ingredients = MutableLiveData<TheAddRecipeReq>()
@@ -178,36 +176,6 @@ class RetrofitRepo(_apiServices: RetrofitAPI = RetrofitClient.createClient().cre
         return ingredients
 
     }
-
-
-
-//    fun getAddRecipeReq() : LiveData<ArrayList<TheAddRecipeReq>>{
-//
-//        val ingredients = MutableLiveData<ArrayList<TheAddRecipeReq>>()
-//        val call = RetrofitClient.createScalarClient().create(RetrofitAPI::class.java).fetchAddRecipe()
-////        val call = scalarApiServices.fetchAddRecipe()
-//
-//        call.enqueue(object : Callback<String> {
-//            override fun onResponse(call: Call<String>, response: Response<String>) {
-//
-//                println("RESPONSE: ".plus(response.body().toString()))
-//
-////                if (response.isSuccessful)
-////                    ingredients.value = response.body()
-//
-//            }
-//
-//            override fun onFailure(call: Call<String>?, t: Throwable?) {
-//
-//                ingredients.value = null
-//
-//            }
-//        })
-//
-//        return ingredients
-//
-//    }
-
 
 
     fun getRecipesOfCategory(categoryID : Int) : LiveData<ArrayList<TheRecipes>>{
@@ -242,7 +210,6 @@ class RetrofitRepo(_apiServices: RetrofitAPI = RetrofitClient.createClient().cre
         val scalarApiServices = RetrofitClient.createScalarClient().create(RetrofitAPI::class.java)
         val call = scalarApiServices.submitRating(userID, recipeID, rating)
 
-
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
 
@@ -254,6 +221,34 @@ class RetrofitRepo(_apiServices: RetrofitAPI = RetrofitClient.createClient().cre
             override fun onFailure(call: Call<String>?, t: Throwable?) {
 
                 println("submit rating Failure ".plus(t.toString()))
+
+            }
+        })
+
+        return theResponse
+
+    }
+
+
+    fun verifyUser(userID : String, authCode : String) : LiveData<String>{
+
+        val theResponse = MutableLiveData<String>()
+        val scalarApiServices = RetrofitClient.createScalarClient().create(RetrofitAPI::class.java)
+        val call = scalarApiServices.verifyUser(userID, authCode)
+
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+
+                println("response success: ".plus(response.body().toString()))
+
+                if (response.isSuccessful)
+                    theResponse.value = response.body().toString()
+
+            }
+
+            override fun onFailure(call: Call<String>?, t: Throwable?) {
+
+                println("user authorization Failure ".plus(t.toString()))
 
             }
         })
@@ -299,6 +294,8 @@ class RetrofitRepo(_apiServices: RetrofitAPI = RetrofitClient.createClient().cre
             override fun onResponse(call: Call<String>, response: Response<String>) {
 
                 println("Send recipe success ".plus(response.body().toString()))
+
+                theResponse.value = response.body().toString()
 
             }
 

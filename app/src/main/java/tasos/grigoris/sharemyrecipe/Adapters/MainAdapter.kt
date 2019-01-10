@@ -54,7 +54,6 @@ class MainAdapter (_context: Context, _array: ArrayList<TheRecipes>)
 
                 val intent = Intent(context, ShowRecipe::class.java)
                 intent.putExtra("recipe", array[layoutPosition])
-                intent.putExtra("id", array[layoutPosition].id)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
 

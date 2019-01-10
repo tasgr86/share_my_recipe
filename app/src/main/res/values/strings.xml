@@ -2,22 +2,24 @@
 
     <string name="app_name">Ελληνικές Συνταγές</string>
 
+    <string name="clientID">1040431152949-k0pbg50lt67fotnura4h46h5l3f4t0tt.apps.googleusercontent.com</string>
+
     <string name="nav_menu1">Δημοφιλείς</string>
     <string name="nav_menu2">Κατηγορίες</string>
     <string name="nav_menu3">Προσθήκη</string>
     <string name="nav_menu4">Αγαπημένες</string>
     <string name="nav_menu5">Προφίλ</string>
 
-    <string name="minutes">Λεπτά</string>
+    <string name="minutes_cap">Λεπτά</string>
 
     <string name="systatika">Υλικά</string>
 
     <string name="submit">Καταχωρηση</string>
     <string name="publish">Δημοσιευση</string>
 
-    <string name="my_rate">Δικιά μου:</string>
+    <string name="my_rate">Βαθμολογία μου:</string>
 
-    <string name="added_to_favorites">Η συνταγή προστέθηκε στα αγαπημένα και είναι διαθέσιμη χωρίς σύνδεση στο Διαδίκτυο</string>
+    <string name="added_to_favorites">Η συνταγή προστέθηκε στα αγαπημένα.</string>
     <string name="removed_from_favorites">Η συνταγή αφαιρέθηκε από τα αγαπημένα</string>
 
 
@@ -34,6 +36,27 @@
     <string name="steps">Εκτέλεση</string>
     <string name="steps_hint">Γράψε οδηγίες</string>
     <string name="section_hint">Ενότητα</string>
-    <string name="preparation_time">Χρόνος προετοιμασίας</string>
+    <string name="preparation_time">Χρόνος προετοιμασίας (λεπτά)</string>
+    <string name="minute">λεπτό</string>
+    <string name="minutes">λεπτά</string>
+
+    <string name="upload_photo">Ανέβασμα φωτογραφίας</string>
+    <string name="add_recipe_title">Στείλε τη συνταγή σου</string>
+    <string name="difficulty">Βαθμός δυσκολίας</string>
+    <string name="upload_success">Το ανέβασμα της συνταγής ολοκληρώθηκε</string>
+    <string name="upload_failure">Το ανέβασμα της συνταγής απέτυχε</string>
+    <string name="close">Κλείσιμο</string>
+
+    <string name="no_recipes_to_show">Δεν υπάρχουν διαθέσιμες συνταγές για προβολή</string>
+    <string name="no_favorites_to_show">Δεν υπάρχουν αγαπημένες συνταγές για προβολή</string>
+    <string name="add_recipe_no_connection">Η επικοινωνία με τον Server απέτυχε. Δεν είναι δυνατή η προσθήκη νέας συνταγής</string>
+
+    <string name="splash_label1">Νόστιμες,</string>
+    <string name="splash_label2">Εύκολες,</string>
+    <string name="splash_label3">Γρήγορες</string>
+    <string name="splash_label4">Ελληνικές συνταγές</string>
+
+    <string name="sign_in_prompt">Δημιούργησε λογαριασμό για να αποκτήσεις πρόσβαση σε όλα τα χαρακτηριστικά της εφαρμογής</string>
+    <string name="terms_of_use_accept">Με την δημιουργία λογαρισμού αποδέχεστε τους όρους χρήσης και την πολιτική απορρήτου της Εφαρμογής</string>
 
 </resources>

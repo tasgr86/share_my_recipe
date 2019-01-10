@@ -5,62 +5,109 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <EditText
-            android:hint="@string/add_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
+    <android.support.design.widget.TextInputLayout
             android:id="@+id/add_ingredients_amount"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintEnd_toStartOf="@+id/add_ingredients_monada"
-            android:inputType="number"/>
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/add_ingredients_monada">
 
-    <EditText
-            android:hint="@string/add_monada"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <EditText
+                android:hint="@string/add_amount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/editext_underline"
+                android:padding="10dp"
+                android:gravity="left"
+                android:id="@+id/add_ingredients_amount_et"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white_light"
+                android:inputType="number"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
             android:id="@+id/add_ingredients_monada"
-            android:gravity="left"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/add_ingredients_amount"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintEnd_toStartOf="@+id/add_ingredients_name"/>
+            app:layout_constraintEnd_toStartOf="@+id/add_ingredients_name">
 
-    <EditText
-            android:hint="@string/add_ingredient_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <EditText
+                android:hint="@string/add_monada"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/add_ingredients_monada_et"
+                android:background="@drawable/editext_underline"
+                android:padding="10dp"
+                android:gravity="left"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white_light"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
             android:id="@+id/add_ingredients_name"
-            android:gravity="left"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/add_ingredients_monada"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintEnd_toStartOf="@+id/add_ingredients_row_delete"/>
+            app:layout_constraintEnd_toStartOf="@+id/add_ingredients_row_delete"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintHorizontal_bias="0.5">
+
+        <EditText
+                android:hint="@string/add_ingredient_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/add_ingredients_name_et"
+                android:background="@drawable/editext_underline"
+                android:padding="10dp"
+                android:gravity="left"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white_light"/>
+
+    </android.support.design.widget.TextInputLayout>
 
     <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            app:srcCompat="@android:drawable/ic_delete"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/ic_bin"
             android:id="@+id/add_ingredients_row_delete"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"

@@ -3,9 +3,8 @@ package tasos.grigoris.sharemyrecipe
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import android.widget.Toast
 import com.google.gson.Gson
-import tasos.grigoris.sharemyrecipe.Model.TheFavorites
+import tasos.grigoris.sharemyrecipe.Model.TheStoredRecipes
 import com.google.gson.reflect.TypeToken
 import java.lang.Exception
 import java.lang.reflect.Type
@@ -14,9 +13,9 @@ class MyFavorites (val context: Context){
 
     var prefs : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     var gson : Gson = Gson()
-    var type: Type = object : TypeToken<ArrayList<TheFavorites>>() {}.type
+    var type: Type = object : TypeToken<ArrayList<TheStoredRecipes>>() {}.type
 
-    fun getFavorites() : ArrayList<TheFavorites> {
+    fun getFavorites() : ArrayList<TheStoredRecipes> {
 
         if (!hasFavorites())
             return ArrayList()
@@ -26,7 +25,7 @@ class MyFavorites (val context: Context){
 
     }
 
-    fun storeFavorites(newFav : TheFavorites) : Boolean{
+    fun storeFavorites(newFav : TheStoredRecipes) : Boolean{
 
         return try {
 
@@ -49,7 +48,7 @@ class MyFavorites (val context: Context){
 
         return try {
 
-            val newFavorites = ArrayList<TheFavorites>()
+            val newFavorites = ArrayList<TheStoredRecipes>()
             val favorites = getFavorites()
 
             favorites.forEach {

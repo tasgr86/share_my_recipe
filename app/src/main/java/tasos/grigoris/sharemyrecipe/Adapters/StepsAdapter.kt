@@ -20,6 +20,7 @@ class StepsAdapter (private val context: Context, _array: ArrayList<TheSteps>, _
     var textSize                = _textSize
     var headerTextSize          = _headerTextSize
 
+
     override fun getItemViewType(position: Int): Int {
 
         return if (array[position].step_type == 0)
@@ -42,14 +43,16 @@ class StepsAdapter (private val context: Context, _array: ArrayList<TheSteps>, _
     override fun onCreateViewHolder(view: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         return if (viewType == ROW)
-            Holder(LayoutInflater.from(context).inflate(R.layout.step_row, view, false))
+           return Holder(LayoutInflater.from(context).inflate(R.layout.step_row, view, false))
         else
             TitleHolder(LayoutInflater.from(context).inflate(R.layout.step_title, view, false))
 
     }
 
     override fun getItemCount(): Int {
+
         return array.size
+
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) {
@@ -58,9 +61,8 @@ class StepsAdapter (private val context: Context, _array: ArrayList<TheSteps>, _
 
             holder.text.text = array[pos].step
             holder.count.text = stepCount.toString()
-            stepCount++
-
             holder.text.textSize = textSize
+            stepCount++
 
         }else {
 
@@ -83,5 +85,4 @@ class StepsAdapter (private val context: Context, _array: ArrayList<TheSteps>, _
         val title = itemView.step_title_label
 
     }
-
 }

@@ -10,50 +10,70 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fr_recipes.*
 import tasos.grigoris.sharemyrecipe.Adapters.FlipAdapter
 import tasos.grigoris.sharemyrecipe.Model.TheRecipes
+import tasos.grigoris.sharemyrecipe.MyApplication
+import tasos.grigoris.sharemyrecipe.MyPrefs
 import tasos.grigoris.sharemyrecipe.R
 
-class FRRecipes : Fragment() {
+    class FRRecipes : Fragment() {
 
-    private lateinit var viewModel: MainViewModel
-//    private lateinit var adapter : MainAdapter
+        private lateinit var viewModel: MainViewModel
+        private lateinit var prefs : MyPrefs
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fr_recipes, container, false)
-    }
+        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+            return inflater.inflate(R.layout.fr_recipes, container, false)
 
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        }
+
+        override fun onActivityCreated(savedInstanceState: Bundle?) {
+            super.onActivityCreated(savedInstanceState)
+
+            prefs = MyPrefs(requireContext())
+
+            viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+
+            viewModel.getRecipes().observe(this, Observer<ArrayList<TheRecipes>>{
+
+                if (it != null) {
+
+                    prefs.storeRecipes(it)
+                    loadAdapter(it)
+
+                } else {
+
+                    val list = prefs.getRecipes()
+
+                    println("COULD NOT FETCH RECIPES. PREFS: ".plus(list))
+
+                    if (list == null)
+                        fr_recipes_no_recipes.visibility = View.VISIBLE
+                    else
+                        loadAdapter(list)
+
+                }
+
+            })
+
+        }
 
 
-        println("FRecipesssss")
+        private fun loadAdapter(list : ArrayList<TheRecipes>){
 
-        viewModel.getRecipes().observe(this, Observer<ArrayList<TheRecipes>>{
+            list.forEach {
 
-            loadAdapter(it!!)
-//            adapter.notifyDataSetChanged()
-
-
-            it.forEach {
-
-                println("RECIPES: ".plus(it.id).plus(" ").plus(it.title).plus(" ").plus(" avg: ".plus(it.avg)))
+                println("fetched list of recipes: ".plus(it.id).plus(it.categoryName).plus(" ").plus(it.title))
 
             }
 
+            val flip_adapter = FlipAdapter(requireContext(), list)
+            fr_recipes_flip_rv.adapter = flip_adapter
 
-        })
+            if (!MyApplication.hasPeaked) {
 
-    }
+                MyApplication.hasPeaked = true
+                fr_recipes_flip_rv.peakNext(true)
 
-
-    private fun loadAdapter(list : ArrayList<TheRecipes>){
-
-      //  adapter = MainAdapter(requireContext(), list)
-        val flip_adapter = FlipAdapter(requireContext(), list)
-        fr_recipes_flip_rv.adapter = flip_adapter
-        fr_recipes_flip_rv.peakNext(true)
+            }
+        }
 
     }
-
-}

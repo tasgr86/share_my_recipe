@@ -9,11 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.recipe_row_2.view.*
-import tasos.grigoris.sharemyrecipe.Model.TheFavorites
+import tasos.grigoris.sharemyrecipe.Model.TheStoredRecipes
 import tasos.grigoris.sharemyrecipe.R
 import tasos.grigoris.sharemyrecipe.ui.main.ShowRecipe
 
-class FavoritesAdapter (_context: Context, _array: ArrayList<TheFavorites>)
+class FavoritesAdapter (_context: Context, _array: ArrayList<TheStoredRecipes>)
     : RecyclerView.Adapter<FavoritesAdapter.Holder>() {
 
     var pic_url = "https://simplebudget.eu/recipes/pictures/recipes/"
@@ -54,9 +54,6 @@ class FavoritesAdapter (_context: Context, _array: ArrayList<TheFavorites>)
 
                 val intent = Intent(context, ShowRecipe::class.java)
                 intent.putExtra("recipe", array[layoutPosition].recipe)
-                intent.putExtra("steps", array[layoutPosition].steps)
-                intent.putExtra("ingredients", array[layoutPosition].ingredients)
-                intent.putExtra("id", array[layoutPosition].recipe.id)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
 

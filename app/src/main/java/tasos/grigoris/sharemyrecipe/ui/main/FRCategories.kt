@@ -15,10 +15,6 @@ import tasos.grigoris.sharemyrecipe.R
 
 class FRCategories : Fragment() {
 
-//    companion object {
-//        fun newInstance() = FRRecipes()
-//    }
-
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter : CategoriesAdapter
 
@@ -33,8 +29,14 @@ class FRCategories : Fragment() {
 
         viewModel.getCategories().observe(this, Observer<ArrayList<TheCategories>>{
 
-            loadAdapter(it!!)
-            adapter.notifyDataSetChanged()
+            if (it == null)
+                fragment_no_items.visibility = View.VISIBLE
+            else {
+
+                loadAdapter(it)
+                adapter.notifyDataSetChanged()
+
+            }
 
         })
 

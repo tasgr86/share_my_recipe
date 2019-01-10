@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/imageView4"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:background="@drawable/ic_favorites_show_recipe_red"/>
+
+
+    <com.hanks.htextview.line.LineTextView
+            android:id="@+id/splash_label1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/imageView4"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="right"
+            android:paddingRight="10dp"
+            android:textSize="@dimen/large"
+            app:animationDuration="10000"
+            app:lineColor="#1367bc"
+            app:lineWidth="4dp"/>
+
+    <com.hanks.htextview.line.LineTextView
+            app:animationDuration="10000"
+            app:lineColor="#1367bc"
+            app:lineWidth="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/splash_label2"
+            app:layout_constraintStart_toEndOf="@+id/splash_label1"
+            android:textSize="@dimen/large"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@+id/splash_label1"
+            app:layout_constraintBottom_toBottomOf="@+id/splash_label1"/>
+
+    <com.hanks.htextview.line.LineTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/large"
+            app:animationDuration="10000"
+            app:lineColor="#1367bc"
+            app:lineWidth="4dp"
+            android:id="@+id/splash_label3"
+            app:layout_constraintTop_toTopOf="@+id/splash_label1"
+            app:layout_constraintStart_toEndOf="@+id/splash_label2" android:layout_marginStart="8dp"/>
+
+    <com.hanks.htextview.line.LineTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/large"
+            app:animationDuration="10000"
+            app:lineColor="#1367bc"
+            app:lineWidth="4dp"
+            android:id="@+id/splash_label4"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/splash_label2"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

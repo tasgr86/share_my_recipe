@@ -2,54 +2,64 @@ package tasos.grigoris.sharemyrecipe.ui.main
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import kotlinx.android.synthetic.main.add_recipe.*
 import tasos.grigoris.sharemyrecipe.R
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.provider.MediaStore
 import android.graphics.Bitmap.CompressFormat
 import android.graphics.Color
+import android.os.Handler
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.view.MenuItem
 import android.view.View
 import java.io.*
 import tasos.grigoris.sharemyrecipe.Adapters.AddIngredientsAdapter
 import tasos.grigoris.sharemyrecipe.Adapters.AddStepsAdapter
-import tasos.grigoris.sharemyrecipe.Utils
 import android.view.ViewGroup
 import android.widget.*
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.DrawableImageViewTarget
+import kotlinx.android.synthetic.main.add_recipe3.*
+import org.json.JSONObject
 import tasos.grigoris.sharemyrecipe.Model.*
-
+import tasos.grigoris.sharemyrecipe.MyConsts
 
 class AddRecipe : AppCompatActivity() {
 
     private lateinit var file1                  : File
     private lateinit var file2                  : File
     private lateinit var viewModel              : MainViewModel
-    private lateinit var title                  : String
-    private lateinit var shortDescription       : String
-    private var posotitaID                      = 0
-    private lateinit var posotitaLabel          : String
+    private lateinit var preparationTime        : String
+    private lateinit var difficulty             : String
     private lateinit var posotites              : ArrayList<ThePosotites>
     private lateinit var categories             : ArrayList<TheCategories>
     private lateinit var ingredientsAdapter     : AddIngredientsAdapter
     private lateinit var stepsAdapter           : AddStepsAdapter
-    private var ingredientsList                 = ArrayList<TheIngredients>()
+    private var ingredientsList                 = ArrayList<String>()
     private var steps                           = ArrayList<TheSteps>()
     private var selectedPosotitaPos             = 0
     private var selectedCategoryPos             = 0
+    private var startLoading                    = 0L
+    private var finishLoading                   = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.add_recipe)
+        setContentView(R.layout.add_recipe3)
+
+        showLoadingLayout()
+
+        add_recipe_toolbar.setTitle("")
+        setSupportActionBar(add_recipe_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        add_recipe_toolbar.setTitle(getString(R.string.add_recipe_title))
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        add_recipe_feature_img.setOnClickListener {
+        add_recipe_feature.setOnClickListener {
 
             startGallery(1)
 
@@ -69,15 +79,27 @@ class AddRecipe : AppCompatActivity() {
 
         add_recipe_add_ingredient.setOnClickListener {
 
-            ingredientsList.add(TheIngredients(name = "", posotita = 0.0, monadaPl = ""))
-            ingredientsAdapter.notifyDataSetChanged()
+            ingredientsList.add("")
+            ingredientsAdapter.notifyItemChanged(ingredientsList.size)
+
+            ingredientsList.forEach {
+
+                println("INGREDIENTS CHECK: ".plus(it))
+
+            }
 
         }
 
         add_recipe_add_step.setOnClickListener {
 
             steps.add(TheSteps(step = "", step_type = 1))
-            stepsAdapter.notifyDataSetChanged()
+            stepsAdapter.notifyItemChanged(steps.size)
+
+            steps.forEach {
+
+                println("STEPS CHECK: ".plus(it.step).plus(" section: ").plus(it.section).plus(" ").plus(it.step_type))
+
+            }
 
         }
 
@@ -85,6 +107,12 @@ class AddRecipe : AppCompatActivity() {
 
             steps.add(TheSteps(step = "", step_type = 0))
             stepsAdapter.notifyDataSetChanged()
+
+            steps.forEach {
+
+                println("STEPS CHECK: ".plus(it.step).plus(" section: ").plus(it.section).plus(" ").plus(it.step_type))
+
+            }
 
         }
 
@@ -97,12 +125,20 @@ class AddRecipe : AppCompatActivity() {
 
     private fun loadIngredientsAdapter(){
 
-        ingredientsList.add(TheIngredients(name = "", posotita = 0.0, monadaPl = ""))
+        ingredientsList.add("")
 
         val llm = LinearLayoutManager(this@AddRecipe)
         ingredientsAdapter = AddIngredientsAdapter(this@AddRecipe, ingredientsList)
         add_recipe_ingredients_rv.layoutManager = llm
         add_recipe_ingredients_rv.adapter = ingredientsAdapter
+
+        ingredientsAdapter.listener = {
+
+            ingredientsList = ArrayList()
+            ingredientsList = it
+            ingredientsAdapter.notifyDataSetChanged()
+
+        }
 
     }
 
@@ -116,17 +152,58 @@ class AddRecipe : AppCompatActivity() {
         add_recipe_steps_rv.layoutManager = llm
         add_recipe_steps_rv.adapter = stepsAdapter
 
+        stepsAdapter.listener = {
+
+            steps = ArrayList()
+            steps = it
+            stepsAdapter.notifyDataSetChanged()
+
+        }
+
     }
 
 
     private fun getPosotites(){
 
+        startLoading = System.currentTimeMillis()
+
         viewModel.getAddRecipeReq().observe(this, Observer<TheAddRecipeReq>{
 
-            categories = it!!.categories!!
-            posotites = it.posotites!!
-            setUpSpinner(1)
-            setUpSpinner(2)
+            if (it?.categories == null || it.posotites == null){
+
+                AlertDialog.Builder(this).setMessage(getString(R.string.add_recipe_no_connection))
+                    .setNegativeButton(getString(R.string.close)) { dialog, which -> finish() }.create().show()
+
+            }else{
+
+                finishLoading = System.currentTimeMillis()
+
+                val diff = finishLoading - startLoading
+
+                if (diff < MyConsts.minLoading){
+
+                    val delay = MyConsts.optimalLoading - diff
+                    Handler().postDelayed({
+
+                        hideLoadingLayout()
+                        categories = it.categories
+                        posotites = it.posotites
+                        setUpSpinner(1)
+                        setUpSpinner(2)
+
+                    }, delay)
+
+                } else {
+
+                    hideLoadingLayout()
+                    categories = it.categories
+                    posotites = it.posotites
+                    setUpSpinner(1)
+                    setUpSpinner(2)
+
+                }
+
+            }
 
         })
 
@@ -147,9 +224,7 @@ class AddRecipe : AppCompatActivity() {
 
             }
 
-        }
-
-        else {
+        } else {
 
             list.add("Επιλογή κατηγορίας")
 
@@ -171,11 +246,11 @@ class AddRecipe : AppCompatActivity() {
 
                 val view = super.getDropDownView(position, convertView, parent)
                 val tv = view as TextView
-                if (position == 0) {
+                if (position == 0)
                     tv.setTextColor(Color.GRAY)
-                } else {
+                 else
                     tv.setTextColor(Color.WHITE)
-                }
+
                 return view
             }
         }
@@ -186,7 +261,7 @@ class AddRecipe : AppCompatActivity() {
         val spinner : Spinner = if (type == 1)
             add_recipe_racions_label
         else
-            add_recipe_category
+            add_recipe_category_label
 
         spinner.adapter = adapter
 
@@ -204,17 +279,11 @@ class AddRecipe : AppCompatActivity() {
                     selectedCategoryPos = position
 
             }
-
         }
-
     }
 
 
-
     private fun submitRecipe(){
-
-        println("Submit recipe ".plus(Utils().getCurrentDate()))
-
 
         if (!::file1.isInitialized || !::file2.isInitialized){
 
@@ -234,32 +303,61 @@ class AddRecipe : AppCompatActivity() {
 
                 }else{
 
-                    if (add_recipe_title.text.isNullOrEmpty()){
+                    if (add_recipe_title_et.text.isNullOrEmpty()){
 
                         Toast.makeText(this, "Enter recipe title", Toast.LENGTH_SHORT).show()
 
                     }else{
 
-                        if (add_recipe_racions.text.isNullOrEmpty() || selectedPosotitaPos == 0){
+                        if (add_recipe_racions_et.text.isNullOrEmpty() || selectedPosotitaPos == 0){
 
                             Toast.makeText(this, "Enter number of rations", Toast.LENGTH_SHORT).show()
 
                         }else{
 
-                            val shortDescription = add_recipe_description.text.toString()
-                            val posotitaLabel = add_recipe_racions.text.toString()
-                            val posotitaID = posotites[selectedPosotitaPos - 1].posotitaID.toString()
-                            val title = add_recipe_title.text.toString()
-                            val categoryID = categories[selectedCategoryPos - 1].id.toString()
-                            val prepTime = add_recipe_preapration_time.text.toString()
-                            val nationality = 1.toString()
-                            val difficulty  = 2.toString()
-                            val userID      = "blablaID"
+                            startLoading = System.currentTimeMillis()
+
+                            showLoadingLayout()
+
+                            val shortDescription        = add_recipe_description_et.text.toString()
+                            val posotitaLabel           = add_recipe_racions_et.text.toString()
+                            val posotitaID              = posotites[selectedPosotitaPos - 1].posotitaID.toString()
+                            val title                   = add_recipe_title_et.text.toString()
+                            val categoryID              = categories[selectedCategoryPos - 1].id.toString()
+                            val nationality             = 1.toString()
+                            val userID                  = "blablaID"
+                            val preparationTime         = add_recipe_time_et.text.toString()
+                            difficulty = "1"
 
                             val recipe = TheRecipeToSend(file1, file2, title, steps, ingredientsList, shortDescription, posotitaID,
-                                posotitaLabel, categoryID, prepTime, nationality, difficulty, userID)
+                                posotitaLabel, categoryID, preparationTime, nationality, difficulty, userID)
 
-                            viewModel.sendRecipe(recipe)
+                            viewModel.sendRecipe(recipe).observe(this, Observer<String>{
+
+                                println("RECIPE SEND ".plus(it))
+
+                                finishLoading = System.currentTimeMillis()
+
+                                val diff = finishLoading - startLoading
+
+                                if (diff < MyConsts.minLoading){
+
+                                    val delay = MyConsts.optimalLoading - diff
+                                    Handler().postDelayed({
+
+                                        hideLoadingLayout()
+                                        showSuccessAD(JSONObject(it).getBoolean("success"))
+
+                                    }, delay)
+
+                                } else {
+
+                                    hideLoadingLayout()
+                                    showSuccessAD(JSONObject(it).getBoolean("success"))
+
+                                }
+
+                            })
 
                         }
                     }
@@ -267,6 +365,14 @@ class AddRecipe : AppCompatActivity() {
                 }
             }
         }
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        onBackPressed()
+
+        return super.onOptionsItemSelected(item)
 
     }
 
@@ -278,7 +384,7 @@ class AddRecipe : AppCompatActivity() {
 
         ingredientsList.forEach {
 
-            if (it.name.isNullOrEmpty() || it.posotita == 0.0 || it.monadaPl.isNullOrEmpty())
+            if (it.isEmpty())
                 return false
 
         }
@@ -325,21 +431,23 @@ class AddRecipe : AppCompatActivity() {
 
         if (requestCode == 1) {
 
-            Toast.makeText(this, "requestCode ".plus(requestCode.toString().plus(" file 1")), Toast.LENGTH_SHORT).show()
-
             add_recipe_feature_img.setImageBitmap(bitmap)
             file1 = File(cacheDir, "pl1.jpg")
             file1.createNewFile()
             fos = FileOutputStream(file1)
 
+            add_recipe_feature_icon.visibility = View.GONE
+            add_recipe_feature_label.visibility = View.GONE
+
         }else if (requestCode == 2){
 
-            Toast.makeText(this, "requestCode ".plus(requestCode.toString().plus(" file 2")), Toast.LENGTH_SHORT).show()
-
-            add_recipe_photo1.setImageBitmap(bitmap)
+            add_recipe_photo1_img.setImageBitmap(bitmap)
             file2 = File(cacheDir, "pl2.jpg")
             file2.createNewFile()
             fos = FileOutputStream(file2)
+
+            add_recipe_photo1_icon.visibility = View.GONE
+            add_recipe_photo1_label.visibility = View.GONE
 
         }
 
@@ -349,22 +457,32 @@ class AddRecipe : AppCompatActivity() {
 
     }
 
-    private fun createBitmap(pickedImage : Uri) : Bitmap{
 
-        val filePath = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = contentResolver.query(pickedImage, filePath, null, null, null)
-        cursor.moveToFirst()
-        val imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]))
+    private fun showSuccessAD(result : Boolean){
 
-        val options = BitmapFactory.Options()
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888
+        val message : String = if (result)
+            getString(R.string.upload_success)
+        else
+            getString(R.string.upload_failure)
 
-//        cursor.close()
+        AlertDialog.Builder(this).setMessage(message.plus(result.toString())).
+            setPositiveButton(getString(R.string.close)) { dialog, which -> finish() }.show()
 
-        println("IMAGEPATH ".plus(imagePath))
-        println("OPTIONS ".plus(options))
+    }
 
-        return BitmapFactory.decodeFile(imagePath, options)
+
+    private fun showLoadingLayout(){
+
+        add_recipe_content.visibility = View.GONE
+        add_recipe_loading_layout.visibility = View.VISIBLE
+        Glide.with(applicationContext).load(R.drawable.loading3).into(DrawableImageViewTarget(add_recipe_gif))
+
+    }
+
+    private fun hideLoadingLayout(){
+
+        add_recipe_content.visibility = View.VISIBLE
+        add_recipe_loading_layout.visibility = View.GONE
 
     }
 
