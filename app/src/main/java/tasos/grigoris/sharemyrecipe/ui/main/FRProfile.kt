@@ -19,6 +19,9 @@ import net.openid.appauth.AuthorizationService
 import tasos.grigoris.sharemyrecipe.AuthStateManager
 import tasos.grigoris.sharemyrecipe.Model.TheLoginResponse
 import tasos.grigoris.sharemyrecipe.RetrofitRepo
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 
 class FRProfile: Fragment() {
 
@@ -27,6 +30,7 @@ class FRProfile: Fragment() {
     private var authState                       : AuthState? = null
     private lateinit var response               : TheLoginResponse
     private lateinit var authStateManager       : AuthStateManager
+    private lateinit var account                : GoogleSignInAccount
 
     companion object {
 
@@ -42,29 +46,6 @@ class FRProfile: Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        authorizationService = AuthorizationService(view!!.context)
-        authStateManager = AuthStateManager(requireContext())
-        authState = authStateManager.getState()
-
-        if (authState == null){
-
-            loadSignInView()
-            init()
-
-        }else {
-
-            if (authState?.needsTokenRefresh!!) {
-
-                verify()
-
-            } else {
-
-                setUpResponse()
-                loadLoggedInView()
-                println("Token will expire on: ".plus(authState?.accessTokenExpirationTime))
-
-            }
-        }
 
         loadBackground()
 
@@ -81,52 +62,23 @@ class FRProfile: Fragment() {
 
     }
 
-    private fun verify(){
+    override fun onStart() {
+        super.onStart()
 
-        println("REFREST TOKEN 1")
+        // If returns an object (rather than null), the user has already signed in with Google
 
-        authState?.performActionWithFreshTokens(authorizationService) { accessToken, idToken, ex ->
+        account = GoogleSignIn.getLastSignedInAccount(context)!!
 
-            if (ex != null){
-
-                Toast.makeText(requireContext(), "Could not refresh tokens ... Logging out ...",
-                    Toast.LENGTH_SHORT).show()
-
-                authStateManager.deleteResponse()
-                authStateManager.deleteState()
-                loadSignInView()
-
-            }else {
-
-                println("REFREST TOKEN 2 ".plus(idToken!!).plus(" ").plus(accessToken!!))
-                verifyAccessToken(idToken!!, accessToken!!)
-
-            }
-        }
     }
+
 
 
     private fun init(){
 
-        val serviceConfig = AuthorizationServiceConfiguration(
-            Uri.parse("https://accounts.google.com/o/oauth2/v2/auth") /* auth endpoint */,
-            Uri.parse("https://www.googleapis.com/oauth2/v4/token") /* token endpoint */
-        )
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
+        var mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), gso);
 
-        authState = AuthState(serviceConfig)
 
-        authStateManager.setState(authState!!)
-
-        val clientId = getString(R.string.clientID)
-        val redirectUri = Uri.parse(getString(R.string.auth_uri))
-        val builder = AuthorizationRequest.Builder(serviceConfig, clientId, ResponseTypeValues.CODE, redirectUri)
-
-        builder.setScopes("openid profile email")
-        val request = builder.build()
-
-        val authService = AuthorizationService(requireContext())
-        val authIntent = authService.getAuthorizationRequestIntent(request)
-        startActivityForResult(authIntent, AUTH_CODE)
 
     }
 
@@ -134,46 +86,12 @@ class FRProfile: Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        val resp = AuthorizationResponse.fromIntent(data!!)
-        val ex = AuthorizationException.fromIntent(data)
-
-        println("auth state manager ".plus(authStateManager))
-        println("resp: ".plus(resp))
-        println("ex: ".plus(ex))
-
-        authStateManager.storeStateAfterAuthorization(resp, ex)
-
-        authForAccessToken(resp!!)
-
-        println("STEP 1 authorization code : ".plus(resp.authorizationCode))
-        println("STEP 1: ".plus(ex))
 
     }
 
 
     private fun authForAccessToken(resp : AuthorizationResponse){
 
-        authorizationService.performTokenRequest(           // Exchange authorization token for access token with the authorization server
-
-            resp.createTokenExchangeRequest()) { respT, exT ->
-
-            if (respT != null) {
-
-                // exchange succeeded
-
-                // ID Token asserts the user's identity (OpenID)
-                // Access token retrieves consented user info
-
-                authStateManager.storeStateAfterAuthentication(respT, exT)
-                authState = authStateManager.getState()!!
-                verify()
-
-            } else {
-
-                println("authorization failed")
-
-            }
-        }
     }
 
 
