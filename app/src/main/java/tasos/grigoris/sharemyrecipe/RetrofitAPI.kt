@@ -40,7 +40,7 @@ interface RetrofitAPI {
 
     @FormUrlEncoded
     @POST("verify_user.php")
-    fun verifyUser(@Field("userID") userID: String, @Field("authCode") recipeID: String): Call<String>
+    fun verifyUser(@Field("userID") userID: String, @Field("accessToken") recipeID: String): Call<TheLoginResponse>
 
     @Multipart
     @POST("publish_recipe.php")

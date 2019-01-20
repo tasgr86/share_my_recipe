@@ -16,9 +16,18 @@
         <activity android:name=".ui.main.AddRecipe"
                   android:configChanges="orientation"
                   android:screenOrientation="portrait"></activity>
+
         <activity android:name=".ui.main.MainActivity"
                   android:configChanges="orientation"
-                  android:screenOrientation="portrait"></activity>
+                  android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="net.openid.appauth.AuthorizationManagementActivity"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
+        </activity>
+
         <activity android:name=".ui.main.ShowRecipe"
                   android:configChanges="orientation"
                   android:screenOrientation="portrait"/>
@@ -38,8 +47,16 @@
 
         </activity>
 
-
-
+        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https"
+                      android:host="tasos.grigoris.sharemyrecipe"
+                      android:path="/oauth2redirect"/>
+            </intent-filter>
+        </activity>
 
     </application>
 

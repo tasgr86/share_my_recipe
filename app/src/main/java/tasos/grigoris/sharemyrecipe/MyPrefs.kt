@@ -51,10 +51,6 @@ class MyPrefs(var context : Context){
     }
 
 
-
-
-
-
     fun getTheStoredRecipe(id : Int) : TheStoredRecipes? {
 
         if (!prefs.contains("stored_recipes"))

@@ -1,18 +1,14 @@
 package tasos.grigoris.sharemyrecipe.ui.main
 
-import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.widget.Toast
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.common.api.ApiException
 import kotlinx.android.synthetic.main.main_activity.*
-import org.json.JSONObject
 import tasos.grigoris.sharemyrecipe.MyApplication
 import tasos.grigoris.sharemyrecipe.R
-import tasos.grigoris.sharemyrecipe.RetrofitRepo
+import tasos.grigoris.sharemyrecipe.AuthStateManager
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,57 +36,20 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-
         println("convert to fraction: ".plus(convertDecimalToFraction(0.5)))
         println("convert to fraction: ".plus(convertDecimalToFraction(0.9)))
         println("convert to fraction: ".plus(convertDecimalToFraction(0.3)))
 
-
         add_recipe.setOnClickListener {
 
-            val intent = Intent(this, AddRecipe::class.java);
-            startActivity(intent)
+            if (!AuthStateManager(this).getState()?.needsTokenRefresh!!){
 
-        }
+                val intent = Intent(this, AddRecipe::class.java);
+                startActivity(intent)
 
-    }
+            }else{
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        println("ACTIVITY RESULT: ".plus(data))
-
-        if (data != null) {
-
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-
-            try {
-
-                val account = task.getResult(ApiException::class.java)
-
-                println("USER ID: ".plus(account!!.id))
-                println("AUTH TOKEN: ".plus(account.idToken))
-
-                RetrofitRepo().verifyUser(account.id!!, account.idToken!!).observe(this, Observer<String>{
-
-                    println("AUTHORIZATION RESPONSE ".plus(it))
-
-                    if (JSONObject(it).getInt("status") == 1){
-
-                        Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show()
-
-                    }else{
-
-                        Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
-
-                    }
-
-                })
-
-            } catch (e: ApiException) {
-
-                e.printStackTrace()
-                println("status code: " + e.statusCode.toString())
+                Toast.makeText(this, "Token has expired ...", Toast.LENGTH_SHORT).show()
 
             }
 

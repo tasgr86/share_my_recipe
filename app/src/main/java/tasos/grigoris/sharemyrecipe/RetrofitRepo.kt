@@ -5,18 +5,11 @@ import retrofit2.Callback
 import retrofit2.Response
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.media.Rating
-import android.widget.Toast
 import com.google.gson.Gson
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
-import retrofit2.create
 import tasos.grigoris.sharemyrecipe.Model.*
-import java.io.File
-import kotlin.coroutines.coroutineContext
-
 
 class RetrofitRepo(_apiServices: RetrofitAPI = RetrofitClient.createClient().create(RetrofitAPI::class.java)){
 
@@ -230,29 +223,26 @@ class RetrofitRepo(_apiServices: RetrofitAPI = RetrofitClient.createClient().cre
     }
 
 
-    fun verifyUser(userID : String, authCode : String) : LiveData<String>{
+    fun verifyUser(userID : String, authCode : String) : LiveData<TheLoginResponse>{
 
-        val theResponse = MutableLiveData<String>()
-        val scalarApiServices = RetrofitClient.createScalarClient().create(RetrofitAPI::class.java)
-        val call = scalarApiServices.verifyUser(userID, authCode)
+        val theResponse = MutableLiveData<TheLoginResponse>()
+        val call = apiServices.verifyUser(userID, authCode)
 
-        call.enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-
-                println("response success: ".plus(response.body().toString()))
+        call.enqueue(object : Callback<TheLoginResponse> {
+            override fun onResponse(call: Call<TheLoginResponse>, response: Response<TheLoginResponse>) {
 
                 if (response.isSuccessful)
-                    theResponse.value = response.body().toString()
+                    theResponse.value = response.body()
 
             }
 
-            override fun onFailure(call: Call<String>?, t: Throwable?) {
+            override fun onFailure(call: Call<TheLoginResponse>?, t: Throwable?) {
 
                 println("user authorization Failure ".plus(t.toString()))
 
             }
-        })
 
+        })
 
         return theResponse
 

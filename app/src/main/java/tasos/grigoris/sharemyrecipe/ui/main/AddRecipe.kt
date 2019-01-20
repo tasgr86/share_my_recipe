@@ -2,7 +2,6 @@ package tasos.grigoris.sharemyrecipe.ui.main
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import tasos.grigoris.sharemyrecipe.R

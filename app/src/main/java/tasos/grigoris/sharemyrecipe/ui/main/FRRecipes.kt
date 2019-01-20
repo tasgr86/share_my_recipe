@@ -30,7 +30,7 @@ import tasos.grigoris.sharemyrecipe.R
 
             prefs = MyPrefs(requireContext())
 
-            viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+            viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
 
             viewModel.getRecipes().observe(this, Observer<ArrayList<TheRecipes>>{
 

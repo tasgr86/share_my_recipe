@@ -9,48 +9,62 @@ import tasos.grigoris.sharemyrecipe.RetrofitRepo
 
 class MainViewModel (var _application: Application) : AndroidViewModel(_application) {
 
+    private lateinit var recipes                    : LiveData<ArrayList<TheRecipes>>
+    private lateinit var categories                 : LiveData<ArrayList<TheCategories>>
+    private lateinit var stepsAndIngredients        : LiveData<TheStepsAndIngredients>
+    private lateinit var addRecipe                  : LiveData<TheAddRecipeReq>
+    private lateinit var recipesOfCategory          : LiveData<ArrayList<TheRecipes>>
+
     fun getRecipes() : LiveData<ArrayList<TheRecipes>> {
 
-        return RetrofitRepo().getRecipes()
+        if (::recipes.isInitialized)
+            return recipes
+
+        recipes = RetrofitRepo().getRecipes()
+        return recipes
 
     }
 
     fun getCategories() : LiveData<ArrayList<TheCategories>> {
 
-        return RetrofitRepo().getCategories()
+        if (::categories.isInitialized)
+            return categories
+
+        categories = RetrofitRepo().getCategories()
+        return categories
 
     }
 
-    fun getIngredientsOfRecipe(recipeID : Int) : LiveData<ArrayList<TheIngredients>> {
-
-        return RetrofitRepo().getIngredientsOfRecipe(recipeID)
-
-    }
 
     fun getStepsAndIngredients(recipeID : Int, userID : Int) : LiveData<TheStepsAndIngredients> {
 
-        return RetrofitRepo().getStepsAndIngredients(recipeID, userID)
+        if (::stepsAndIngredients.isInitialized)
+            return stepsAndIngredients
 
-    }
-
-    fun getSteps(recipeID : Int) : LiveData<ArrayList<TheSteps>> {
-
-        return RetrofitRepo().getSteps(recipeID)
+        stepsAndIngredients = RetrofitRepo().getStepsAndIngredients(recipeID, userID)
+        return stepsAndIngredients
 
     }
 
 
     fun getAddRecipeReq() : LiveData<TheAddRecipeReq> {
 
-        return RetrofitRepo().getAddRecipeReq()
+        if (::addRecipe.isInitialized)
+            return addRecipe
+
+        addRecipe = RetrofitRepo().getAddRecipeReq()
+        return addRecipe
 
     }
 
 
-
     fun getRecipesOfCategory(categoryID : Int) : LiveData<ArrayList<TheRecipes>> {
 
-        return RetrofitRepo().getRecipesOfCategory(categoryID)
+        if (::recipesOfCategory.isInitialized)
+            return recipesOfCategory
+
+        recipesOfCategory = RetrofitRepo().getRecipesOfCategory(categoryID)
+        return recipesOfCategory
 
     }
 
@@ -91,6 +105,4 @@ class MainViewModel (var _application: Application) : AndroidViewModel(_applicat
         return RetrofitRepo().sendRecipe(recipe)
 
     }
-
-
 }
