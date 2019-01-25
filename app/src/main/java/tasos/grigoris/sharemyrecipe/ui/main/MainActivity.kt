@@ -5,16 +5,33 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.widget.Toast
+import com.google.firebase.FirebaseApp
+import com.google.firebase.FirebaseOptions
 import kotlinx.android.synthetic.main.main_activity.*
 import tasos.grigoris.sharemyrecipe.MyApplication
 import tasos.grigoris.sharemyrecipe.R
 import tasos.grigoris.sharemyrecipe.AuthStateManager
+import tasos.grigoris.sharemyrecipe.SignInManager
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var signInManager: SignInManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
+
+//        val options = FirebaseOptions.Builder()
+//            .setApplicationId("1:1057089381477:android:e260205b5e0766d8") // Required for Analytics.
+//            .setApiKey("AIzaSyDgvqBJ1JJbwSqzDI18lWkiOLnpZDm4Skg") // Required for Auth.
+//            .build()
+//
+//        FirebaseApp.initializeApp(this, options, "secondary")
+
+
+        signInManager = SignInManager(this)
+        signInManager.initGSO()
+
 
         setSupportActionBar(main_activity_toolbar)
 
@@ -42,20 +59,19 @@ class MainActivity : AppCompatActivity() {
 
         add_recipe.setOnClickListener {
 
-            if (!AuthStateManager(this).getState()?.needsTokenRefresh!!){
+            if (signInManager.getAccount() != null){
 
                 val intent = Intent(this, AddRecipe::class.java);
                 startActivity(intent)
 
             }else{
 
-                Toast.makeText(this, "Token has expired ...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "You are not logged in ...", Toast.LENGTH_SHORT).show()
 
             }
 
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

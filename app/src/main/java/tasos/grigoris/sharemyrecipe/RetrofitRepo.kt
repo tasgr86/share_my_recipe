@@ -223,20 +223,23 @@ class RetrofitRepo(_apiServices: RetrofitAPI = RetrofitClient.createClient().cre
     }
 
 
-    fun verifyUser(userID : String, authCode : String) : LiveData<TheLoginResponse>{
+    fun verifyUser(authCode : String) : LiveData<String>{
 
-        val theResponse = MutableLiveData<TheLoginResponse>()
-        val call = apiServices.verifyUser(userID, authCode)
+        val theResponse = MutableLiveData<String>()
+        val scalarApiServices = RetrofitClient.createScalarClient().create(RetrofitAPI::class.java)
+        val call = scalarApiServices.verifyUser(authCode)
 
-        call.enqueue(object : Callback<TheLoginResponse> {
-            override fun onResponse(call: Call<TheLoginResponse>, response: Response<TheLoginResponse>) {
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+
+                println("VERIFY RESPONSE: ".plus(response.body().toString()))
 
                 if (response.isSuccessful)
                     theResponse.value = response.body()
 
             }
 
-            override fun onFailure(call: Call<TheLoginResponse>?, t: Throwable?) {
+            override fun onFailure(call: Call<String>?, t: Throwable?) {
 
                 println("user authorization Failure ".plus(t.toString()))
 

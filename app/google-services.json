@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "1040431152949",
-    "firebase_url": "https://recipes-ca839.firebaseio.com",
-    "project_id": "recipes-ca839",
-    "storage_bucket": "recipes-ca839.appspot.com"
+    "project_number": "759316138823",
+    "firebase_url": "https://recipes4.firebaseio.com",
+    "project_id": "recipes4",
+    "storage_bucket": "recipes4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1040431152949:android:e260205b5e0766d8",
+        "mobilesdk_app_id": "1:759316138823:android:e260205b5e0766d8",
         "android_client_info": {
           "package_name": "tasos.grigoris.sharemyrecipe"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1040431152949-ed58ms0kgms6ite9laodi8t34lococp2.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "tasos.grigoris.sharemyrecipe",
-            "certificate_hash": "1328b93f4c359aa69f4d50b82b17e0ca7bb430a5"
-          }
-        },
-        {
-          "client_id": "1040431152949-k0pbg50lt67fotnura4h46h5l3f4t0tt.apps.googleusercontent.com",
+          "client_id": "759316138823-ttcg6o8s55do2ni8hucq3p358pf0om0p.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA-Kv9eCmvuyoOoa1_rnXantIWaJiHGf80"
+          "current_key": "AIzaSyAurCwDRwQbE6qH7P0IRq0DCtMhvzXAaRw"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1040431152949-k0pbg50lt67fotnura4h46h5l3f4t0tt.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

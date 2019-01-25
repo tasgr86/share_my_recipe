@@ -2,7 +2,7 @@
 
     <string name="app_name">Ελληνικές Συνταγές</string>
 
-    <string name="clientID">1040431152949-ed58ms0kgms6ite9laodi8t34lococp2.apps.googleusercontent.com</string>
+    <string name="clientID">759316138823-g9ncu3d4ckdug1k7iqarjmmmbf7j4ijb.apps.googleusercontent.com</string>
     <string name="auth_uri">tasos.grigoris.sharemyrecipe:/oauth2callback</string>
 
     <string name="nav_menu1">Δημοφιλείς</string>
@@ -60,5 +60,8 @@
     <string name="terms_of_use_accept">Με την δημιουργία λογαρισμού αποδέχεστε τους όρους χρήσης και την πολιτική απορρήτου της Εφαρμογής</string>
 
     <string name="welcome">Καλώς Όρισες στις Ελληνικές συνταγές,</string>
+
+    <string name="login">συνδεση μεσω gmail</string>
+    <string name="logout">αποσυνδεση</string>
 
 </resources>
