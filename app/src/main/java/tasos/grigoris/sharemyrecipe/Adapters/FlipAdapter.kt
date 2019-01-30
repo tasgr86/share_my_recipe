@@ -66,9 +66,12 @@ class FlipAdapter(var context: Context, var recipes: ArrayList<TheRecipes>) : Ba
 
         convertView.setOnClickListener {
 
-            val intent = Intent(context, ShowRecipe::class.java)
-            intent.putExtra("recipe", recipes[position])
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            val intent = Intent(context, ShowRecipe::class.java).apply {
+
+                putExtra("recipe", recipes[position])
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+            }
             context.startActivity(intent)
 
         }

@@ -8,9 +8,6 @@ import java.util.concurrent.TimeUnit
 import com.google.gson.GsonBuilder
 import com.google.gson.Gson
 
-
-
-
 class RetrofitClient{
 
     companion object {

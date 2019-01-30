@@ -33,11 +33,7 @@ class MainAdapter (_context: Context, _array: ArrayList<TheRecipes>)
     override fun onBindViewHolder(holder: Holder, pos: Int) {
 
         holder.title.text = array[pos].title
-
-        Picasso.get()
-            .load(pic_url.plus(array[pos].photo1))
-            .into(holder.image)
-
+        Picasso.get().load(pic_url.plus(array[pos].photo1)).into(holder.image)
         holder.tint.setBackgroundColor(ContextCompat.getColor(context, R.color.tint_black))
 
     }
@@ -52,9 +48,12 @@ class MainAdapter (_context: Context, _array: ArrayList<TheRecipes>)
 
             itemView.setOnClickListener {
 
-                val intent = Intent(context, ShowRecipe::class.java)
-                intent.putExtra("recipe", array[layoutPosition])
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                val intent = Intent(context, ShowRecipe::class.java).apply {
+
+                    putExtra("recipe", array[layoutPosition])
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+                }
                 context.startActivity(intent)
 
             }

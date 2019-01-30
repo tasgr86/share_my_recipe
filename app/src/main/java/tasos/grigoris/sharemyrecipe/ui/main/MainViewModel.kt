@@ -4,7 +4,6 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import tasos.grigoris.sharemyrecipe.Model.*
-import tasos.grigoris.sharemyrecipe.MyFavorites
 import tasos.grigoris.sharemyrecipe.RetrofitRepo
 
 class MainViewModel (var _application: Application) : AndroidViewModel(_application) {
@@ -65,30 +64,6 @@ class MainViewModel (var _application: Application) : AndroidViewModel(_applicat
 
         recipesOfCategory = RetrofitRepo().getRecipesOfCategory(categoryID)
         return recipesOfCategory
-
-    }
-
-    fun getFavorites() : ArrayList<TheStoredRecipes>{
-
-        return MyFavorites(_application).getFavorites()
-
-    }
-
-    fun storeFavorites(fav : TheStoredRecipes){
-
-        MyFavorites(_application).storeFavorites(fav)
-
-    }
-
-    fun removeFavorite(id : Int){
-
-        MyFavorites(_application).removeFavorite(id)
-
-    }
-
-    fun isFavorite(id : Int) : Boolean{
-
-        return MyFavorites(_application).isFavorite(id)
 
     }
 

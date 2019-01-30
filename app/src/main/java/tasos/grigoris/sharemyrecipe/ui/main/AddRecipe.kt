@@ -51,10 +51,10 @@ class AddRecipe : AppCompatActivity() {
 
         showLoadingLayout()
 
-        add_recipe_toolbar.setTitle("")
+        add_recipe_toolbar.title = ""
         setSupportActionBar(add_recipe_toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        add_recipe_toolbar.setTitle(getString(R.string.add_recipe_title))
+        add_recipe_toolbar.title = getString(R.string.add_recipe_title)
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
@@ -484,5 +484,4 @@ class AddRecipe : AppCompatActivity() {
         add_recipe_loading_layout.visibility = View.GONE
 
     }
-
 }

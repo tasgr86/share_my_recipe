@@ -33,11 +33,7 @@ class FavoritesAdapter (_context: Context, _array: ArrayList<TheStoredRecipes>)
     override fun onBindViewHolder(holder: Holder, pos: Int) {
 
         holder.title.text = array[pos].recipe.title
-
-        Picasso.get()
-            .load(pic_url.plus(array[pos].recipe.photo1))
-            .into(holder.image)
-
+        Picasso.get().load(pic_url.plus(array[pos].recipe.photo1)).into(holder.image)
         holder.tint.setBackgroundColor(ContextCompat.getColor(context, R.color.tint_black))
 
     }
@@ -52,9 +48,12 @@ class FavoritesAdapter (_context: Context, _array: ArrayList<TheStoredRecipes>)
 
             itemView.setOnClickListener {
 
-                val intent = Intent(context, ShowRecipe::class.java)
-                intent.putExtra("recipe", array[layoutPosition].recipe)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                val intent = Intent(context, ShowRecipe::class.java).apply {
+
+                    putExtra("recipe", array[layoutPosition].recipe)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+                }
                 context.startActivity(intent)
 
             }

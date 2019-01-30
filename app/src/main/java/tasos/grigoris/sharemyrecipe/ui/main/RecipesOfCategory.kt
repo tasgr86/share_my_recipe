@@ -37,7 +37,7 @@ class RecipesOfCategory : AppCompatActivity() {
             recipes = it!!
             loadAdapter(it)
 
-            recipes.forEach { println("recipe: ".plus(it.title).plus(" ").plus(it.shortInstructions)) }
+            recipes.forEach { println("category recipes: ".plus(it.title).plus(" ").plus(it.shortInstructions)) }
 
         })
 
@@ -58,11 +58,6 @@ class RecipesOfCategory : AppCompatActivity() {
         adapter = MainAdapter(applicationContext, list)
         recipes_of_category_rv.layoutManager = lm
         recipes_of_category_rv.adapter = adapter
-
-
-//        val flip_adapter = FoldingRecipesAdapter(applicationContext, list)
-//        list_view.adapter = flip_adapter
-//        list_view.peakNext(true)
 
 
     }
